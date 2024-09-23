@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Kodok Samarinda",
+    "nickName": "acumalaka",
+    "class": "FSW-1",
+    "address": {
+      "province": "East Java",
+      "city": "Sidoarjo"
+    },
+    "education": {
+      "bachelor": "Universitas Negeri Surabaya"
+    }
+  },
+  {
+    "name": "Aruffin bin Abdul Salam",
+    "nickName": "Udin",
+    "class": "FSW-1",
+    "address": {
+      "province": "East Java",
+      "city": "Malang"
+    },
+    "education": {
+      "bachelor": "UPN Veteran East Java"
+    }
+  },
+  {
+    "name": "Zhang Aiqin",
+    "nickName": "Eggman",
+    "class": "FSW-1",
+    "address": {
+      "province": "East Java",
+      "city": "Malang"
+    },
+    "education": {
+      "bachelor": "UPN Veteran East Java"
+    }
+  },
+  {
+    "name": "Abdul Somat",
+    "nickName": "Maling Pencit",
+    "class": "FSW-1",
+    "address": {
+      "province": "Lampung",
+      "city": "Lampung"
+    },
+    "education": {
+      "bachelor": "Universitas Lampung"
+    }
+  },
+  {
+    "name": "Barokah",
+    "nickName": "Maling Jambu",
+    "class": "FSW-1",
+    "address": {
+      "province": "Lampung",
+      "city": "Lampung"
+    },
+    "education": {
+      "bachelor": "Universitas Lampung"
+    }
+  }
+]

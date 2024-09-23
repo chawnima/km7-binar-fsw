@@ -1,0 +1,19 @@
+@keyframes spin {
+  0%{
+    rotate:0deg;
+  }
+  100%{
+    rotate:360deg;
+  }
+}
+@keyframes rgb {
+  0%{background-color: red;}
+  50%{background-color: green;}
+  100%{background-color: blue;}
+}
+.card{
+  animation: spin 0.7s linear infinite;
+}
+.card-body{
+  animation: rgb 0.2s linear infinite;
+}

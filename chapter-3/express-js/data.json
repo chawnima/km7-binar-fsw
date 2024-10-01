@@ -1,6 +1,6 @@
 [
   {
-    "id":1,
+    "id": 1,
     "name": "Kodok Samarinda",
     "nickName": "acumalaka",
     "class": "FSW-1",
@@ -13,7 +13,7 @@
     }
   },
   {
-    "id":2,
+    "id": 2,
     "name": "Aruffin bin Abdul Salam",
     "nickName": "Udin",
     "class": "FSW-1",
@@ -26,7 +26,7 @@
     }
   },
   {
-    "id":3,
+    "id": 3,
     "name": "Zhang Aiqin",
     "nickName": "Eggman",
     "class": "FSW-1",
@@ -39,7 +39,7 @@
     }
   },
   {
-    "id":4,
+    "id": 4,
     "name": "Abdul Somat",
     "nickName": "Maling Pencit",
     "class": "FSW-1",
@@ -52,7 +52,7 @@
     }
   },
   {
-    "id":5,
+    "id": 5,
     "name": "Barokah",
     "nickName": "Maling Jambu",
     "class": "FSW-1",
@@ -62,6 +62,19 @@
     },
     "education": {
       "bachelor": "Universitas Lampung"
+    }
+  },
+  {
+    "id": 6,
+    "name": "Emu",
+    "nickName": "wandahoi",
+    "class": "FSW-1",
+    "address": {
+      "province": "East Java",
+      "city": "Sidoarjo"
+    },
+    "education": {
+      "bachelor": "Universitas Negeri Surabaya"
     }
   }
 ]

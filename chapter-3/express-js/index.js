@@ -1,6 +1,7 @@
 const express = require("express");
 const students = require("./data.json");
 const fs = require("fs");
+const { z } = require("zod");
 
 const app = express();
 const port = 3000;
@@ -27,42 +28,63 @@ app.get("/students/:id", (req, res) => {
 });
 
 app.post("/students", (req, res) => {
-  const { name, nickName, address, education } = req.body;
-  const { province, city } = address;
-  const { bachelor } = education;
-  if (
-    !name ||
-    !nickName ||
-    !req.body.class ||
-    !province ||
-    !city ||
-    !bachelor
-  ) {
-    res.status(400).json({
-      message: "error: missing some data info",
-    });
-    return;
-  }
+  const validateBody = z.object({
+    name: z.string(),
+    nickName: z.string(),
+    class: z.string(),
+    address: z.object({
+      province: z.string(),
+      city: z.string(),
+    }),
+    education: z
+      .object({
+        bachelor: z.string().optional().nullable(),
+      })
+      .optional()
+      .nullable(),
+  });
 
+  const result = validateBody.safeParse(req.body);
+  if (!result.success) {
+    return res.status(400).json({
+      message: "Validation failed",
+      errors: result.error.errors.map((err) => ({
+        field: err.path[0],
+        issue: err.message,
+      })),
+    });
+  }
+  const maxId=students.reduce((max,student)=>Math.max(max,student.id),0)
   const newStudent = {
-    id: students.length + 1,
-    name,
-    nickName,
-    class: req.body.class,
-    address: {
-      province,
-      city,
-    },
-    education: {
-      bachelor,
-    },
+    id: maxId+1,
+    ...req.body,
   };
   students.push(newStudent);
-  const data = fs.readFileSync("./data.json");
-  const myObject = JSON.parse(data);
-  myObject.push(newStudent);
-  const newData = JSON.stringify(myObject, null, 2);
-  fs.writeFileSync("./data.json", newData);
+  fs.writeFileSync("./data.json", JSON.stringify(students, null, 2), "utf-8");
+  res.status(201).json(students);
+});
+
+app.delete("/students/:id", (req, res) => {
+  const validateParams = z.object({
+    id: z.string(),
+  });
+  const result = validateParams.safeParse(req.params);
+  if (!result.success) {
+    return res.status(400).json({
+      message: "Validation failed",
+      errors: result.error.errors.map((err) => ({
+        field: err.path[0],
+        issue: err.message,
+      })),
+    });
+  };
+  const {id}=req.params;
+  const index=students.findIndex(student=>student.id==id);
+  if (index==-1){
+    res.status(400).json({message:"Students id not found"});
+  }
+  students.splice(index,1);
+  fs.writeFileSync("./data.json", JSON.stringify(students, null, 2), "utf-8");
   res.status(201).json(students);
 });
 

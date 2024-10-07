@@ -3,20 +3,22 @@ const students = require("./data.json");
 const fs = require("fs");
 const { z } = require("zod");
 require("express-async-errors");
+const router=require("./src/routes");
+const { notFoundURLHandler } = require("./src/middlewares/errors");
 
 const app = express();
 const port = 3000;
-
+app.use(express.json());
+/*
 const successResponse = (res, data) => {
   res.status(200).json({ success: true, data });
 };
 
-app.use(express.json());
-
 app.get("/", (req, res) => {
   res.send("lolol");
-});
+});*/
 
+/*
 app.get("/students", (req, res, next) => {
   const validateQuery = z.object({
     name: z.string().optional(),
@@ -52,6 +54,9 @@ app.get("/students", (req, res, next) => {
   }
   successResponse(res, searchedStudent);
 });
+*/
+
+app.use("/",router);
 
 app.get("/students/:id", (req, res) => {
   const { id } = req.params;
@@ -177,10 +182,12 @@ app.delete("/students/:id", (req, res) => {
   successResponse(res, students);
 });
 
+app.use("*",notFoundURLHandler);
 app.use((err, req, res, next) => {
   const status = err.status || 500;
   const errors = err.errors || [];
   const message = status != 500 ? err.message : "Internal Server Error";
+  console.log(err);
   res.status(status).json({
     success: false,
     data: null,
@@ -188,6 +195,7 @@ app.use((err, req, res, next) => {
     errors,
   });
 });
+
 
 app.listen(port, () => {
   console.log(`The express.js app is running on port ${port}`);

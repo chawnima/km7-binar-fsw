@@ -1,5 +1,6 @@
 const studentService = require("../services/students");
 const { successResponse } = require("../utils/response");
+const { NotFoundError } = require("../utils/request");
 
 exports.getStudents = (req, res, next) => {
   const data = studentService.getStudents(
@@ -9,3 +10,32 @@ exports.getStudents = (req, res, next) => {
   );
   successResponse(res, data);
 };
+
+exports.getStudentsById = (req, res, next) => {
+  const data = studentService.getStudentsById(req.params.id);
+  if (!data){
+    throw new NotFoundError(`Students not found`);
+  }
+  successResponse(res, data);
+};
+
+exports.postStudents = (req, res, next) => {
+  const data = studentService.postStudents(req.body);
+  successResponse(res, data);
+};
+
+exports.putStudents=(req, res, next) => {
+  const data=studentService.putStudents(req.params.id,req.body);
+  if (!data){
+    throw new NotFoundError(`Students id not found`);
+  };
+  successResponse(res,data);
+}
+
+exports.deleteStudents=(req,res,next)=>{
+  const data=studentService.deleteStudents(req.params.id);
+  if (!data){
+    throw new NotFoundError(`Students id not found`);
+  };
+  successResponse(res,data);
+}

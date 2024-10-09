@@ -1,9 +1,9 @@
 const ImageKit = require("imagekit");
 
 const imagekit = new ImageKit({
-  publicKey: "public_51oAtMWL70Xt2KsI6zlke0Dj2Ag=",
-  privateKey: "private_h97ZHeW+Gd46Tkj63ZiVgy1MLKI=",
-  urlEndpoint: "https://ik.imagekit.io/jawir",
+  publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+  privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+  urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
 });
 exports.imageUpload = async (file) => {
   const uploadedFile = await imagekit.upload({

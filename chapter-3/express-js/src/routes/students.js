@@ -11,15 +11,20 @@ const {
   getStudentsById,
   postStudents,
   putStudents,
-  deleteStudents
+  deleteStudents,
 } = require("../controllers/students");
 
 const router = express.Router();
 
-router.get("/", validateGetStudents, getStudents);
-router.get("/:id", validateGetParams, getStudentsById);
-router.post("/", validatePostStudents, postStudents);
-router.put("/:id",validatePutStudents, putStudents);
-router.delete("/:id",validateGetParamsId, deleteStudents);
+router
+  .route("/")
+  .get(validateGetStudents, getStudents)
+  .post(validatePostStudents, postStudents);
+
+router
+  .route("/:id")
+  .get(validateGetParams, getStudentsById)
+  .put(validatePutStudents, putStudents)
+  .delete(validateGetParamsId, deleteStudents);
 
 module.exports = router;

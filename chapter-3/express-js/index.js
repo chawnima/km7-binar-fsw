@@ -1,12 +1,12 @@
 const express = require("express");
 require("express-async-errors");
+require("dotenv").config();
 const router = require("./src/routes");
 const {
   notFoundURLHandler,
   errorHandler,
 } = require("./src/middlewares/errors");
 const fileUpload = require("express-fileupload");
-const { use } = require("express/lib/router");
 
 const app = express();
 const port = 3000;
@@ -14,8 +14,6 @@ app.use(express.json());
 
 app.use(
   fileUpload({
-    useTempFiles: true,
-    tempFileDir: "tmp/",
     limits: { fileSize: 50 * 1024 * 1024 },
   })
 );

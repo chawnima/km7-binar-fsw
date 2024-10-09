@@ -76,5 +76,33 @@
     "education": {
       "bachelor": "Universitas Negeri Surabaya"
     }
+  },
+  {
+    "id": 8,
+    "name": "Windah",
+    "nickName": "Batubara",
+    "class": "FSW-1",
+    "profilePicture": null,
+    "address": {
+      "province": "Djakarta",
+      "city": "Djateng"
+    },
+    "education": {
+      "bachelor": "Universitas Arman"
+    }
+  },
+  {
+    "id": 9,
+    "name": "Windah",
+    "nickName": "Batubara",
+    "class": "FSW-1",
+    "profilePicture": "https://ik.imagekit.io/jawir/img_photo1_3vXv43k96.png",
+    "address": {
+      "province": "Djakarta",
+      "city": "Djateng"
+    },
+    "education": {
+      "bachelor": "Universitas Arman"
+    }
   }
 ]

@@ -34,7 +34,19 @@ exports.postStudents = (data) => {
   const newStudent = {
     id: maxId + 1,
     ...data,
+    address:{
+      province:data["address.province"],
+      city:data["address.city"]
+    },
+    education:{
+      bachelor:data["education.bachelor"]
+    },
+    profilePicture: data.profilePicture,
   };
+  delete newStudent["address.province"];
+  delete newStudent["address.city"];
+  delete newStudent["education.bachelor"];
+
   students.push(newStudent);
   fs.writeFileSync("./data.json", JSON.stringify(students, null, 2), "utf-8");
   return newStudent;

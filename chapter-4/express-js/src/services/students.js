@@ -5,8 +5,8 @@ exports.getStudents = async (name, nickName) => {
   return await studentRepository.getStudents(name, nickName);
 }
 
-exports.getStudentsById = (id) => {
-  return studentRepository.getStudentsById(id);
+exports.getStudentsById = async (id) => {
+  return await studentRepository.getStudentsById(id);
 }
 
 exports.postStudents= async (data,file)=>{
@@ -16,10 +16,10 @@ exports.postStudents= async (data,file)=>{
   return await studentRepository.postStudents(data);
 }
 
-exports.putStudents=(id,data)=>{
-  return studentRepository.putStudents(id,data);
+exports.putStudents=async (id,data)=>{
+  return await studentRepository.putStudents(id,data);
 }
 
-exports.deleteStudents=(id)=>{
-  return studentRepository.deleteStudents(id);
+exports.deleteStudents= async (id)=>{
+  return await studentRepository.deleteStudents(id);
 }

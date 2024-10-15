@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "npx nodemon index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "prisma:db:pull":"npx prisma db pull",
+    "prisma:generate":"npx prisma generate",
+    "prisma:refresh":"npm run prisma:db:pull && npm run prisma:generate"
   },
   "keywords": [],
   "author": "",

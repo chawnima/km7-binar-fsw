@@ -10,8 +10,8 @@ exports.getStudents = async (req, res, next) => {
   successResponse(res, data);
 };
 
-exports.getStudentsById = (req, res, next) => {
-  const data = studentService.getStudentsById(req.params.id);
+exports.getStudentsById = async (req, res, next) => {
+  const data = await studentService.getStudentsById(req.params.id);
   if (!data) {
     throw new NotFoundError(`Students not found`);
   }
@@ -23,16 +23,16 @@ exports.postStudents = async (req, res, next) => {
   successResponse(res, data);
 };
 
-exports.putStudents = (req, res, next) => {
-  const data = studentService.putStudents(req.params.id, req.body);
+exports.putStudents = async (req, res, next) => {
+  const data = await studentService.putStudents(req.params.id, req.body);
   if (!data) {
     throw new NotFoundError(`Students id not found`);
   }
   successResponse(res, data);
 };
 
-exports.deleteStudents = (req, res, next) => {
-  const data = studentService.deleteStudents(req.params.id);
+exports.deleteStudents = async (req, res, next) => {
+  const data = await studentService.deleteStudents(req.params.id);
   if (!data) {
     throw new NotFoundError(`Students id not found`);
   }

@@ -62,23 +62,31 @@ exports.validatePutStudents = (req, res, next) => {
   const id = Number(req.params.id);
   const validateParams = z.number();
   const validateBody = z.object({
-    name: z.string(),
-    nickName: z.string(),
-    class: z.string(),
-    address: z.object({
-      province: z.string(),
-      city: z.string(),
-    }),
-    education: z
-      .object({
-        bachelor: z.string().optional().nullable(),
-      })
-      .optional()
-      .nullable(),
+    name: z.string().optional().nullable(),
+    nick_name: z.string().optional().nullable(),
+    class_id:z.string().optional().nullable(),
+    university_id:z.string().optional().nullable(),
   });
+  const validatePicture = z
+    .object({
+      profile_picture: z
+        .object({
+          data: z.any(),
+          name: z.string(),
+        })
+        .optional()
+        .nullable(),
+    })
+    .optional()
+    .nullable();
+
   const resultValidateParams = validateParams.safeParse(id);
   if (!resultValidateParams.success) {
     throw new BadRequestError(resultValidateParams.error.errors);
+  }
+  const resultValidatePicture = validatePicture.safeParse(req.file);
+  if (!resultValidatePicture.success) {
+    throw new BadRequestError(resultValidatePicture.error.errors);
   }
   const resultValidateBody = validateBody.safeParse(req.body);
   if (!resultValidateBody.success) {

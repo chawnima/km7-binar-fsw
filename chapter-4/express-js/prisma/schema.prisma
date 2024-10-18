@@ -21,6 +21,7 @@ model students {
   profile_picture String?
   class_id        BigInt
   university_id   BigInt
+  mewing_streak   BigInt?
   classes         classes      @relation(fields: [class_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   universities    universities @relation(fields: [university_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

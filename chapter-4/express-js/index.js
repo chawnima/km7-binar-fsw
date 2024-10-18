@@ -9,7 +9,7 @@ const {
 const fileUpload = require("express-fileupload");
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 app.use(express.json());
 
 app.use(
@@ -24,6 +24,6 @@ app.use("*", notFoundURLHandler);
 
 app.use(errorHandler);
 
-app.listen(port, () => {
+app.listen(port, "192.168.100.5", () => {
   console.log(`The express.js app is running on port ${port}`);
 });

@@ -24,6 +24,6 @@ app.use("*", notFoundURLHandler);
 
 app.use(errorHandler);
 
-app.listen(port, "192.168.100.5", () => {
+app.listen(port, () => {
   console.log(`The express.js app is running on port ${port}`);
 });

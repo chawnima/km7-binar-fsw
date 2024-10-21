@@ -19,6 +19,14 @@
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}\\chapter-4\\express-js\\index.js",
       "cwd": "${workspaceFolder}\\chapter-4\\express-js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program Chapter 5",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}\\chapter-5\\index.js",
+      "cwd": "${workspaceFolder}\\chapter-5"
     }
   ]
 }

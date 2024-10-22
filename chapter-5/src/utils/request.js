@@ -11,4 +11,16 @@ class NotFoundError extends Error {
     this.status = 404;
   }
 }
-module.exports = { BadRequestError, NotFoundError };
+class UnauthorizedError extends Error {
+  constructor(message) {
+    super(message ? message : "Access Unauthorized!");
+    this.status = 401;
+  }
+}
+class Forbidden extends Error {
+  constructor(message) {
+    super(message ? message : "Access Unauthorized!");
+    this.status = 403;
+  }
+}
+module.exports = { BadRequestError, NotFoundError, UnauthorizedError, Forbidden };

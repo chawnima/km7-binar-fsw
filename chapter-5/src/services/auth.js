@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const { imageUpload } = require("../utils/image-kit");
 
 exports.createUser = async (data,file) => {
-  if (file.profile_picture){
+  if (file?.profile_picture){
     data.profile_picture = await imageUpload(file.profile_picture);
   }
   const user = await userRepositories.createUser(data);
@@ -20,6 +20,6 @@ exports.createUser = async (data,file) => {
   };
 };
 
-exports.loginUser = async(data)=>{
-  return await userRepositories.loginUser(data);
+exports.getUserByEmail = async(data)=>{
+  return await userRepositories.getUserByEmail(data);
 }

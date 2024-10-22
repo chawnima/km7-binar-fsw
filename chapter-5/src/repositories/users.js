@@ -15,10 +15,20 @@ exports.createUser = async (data) => {
   return JSONBigInt.parse(serializedUser);
 }
 
-exports.loginUser=async(data)=>{
-  const getUser=await prisma.users.findUnique({
+exports.getUserByEmail=async(data)=>{
+  const getUser=await prisma.users.findFirst({
     where:{
       email:data.email
+    }
+  })
+  const serializedUser=JSONBigInt.stringify(getUser);
+  return JSONBigInt.parse(serializedUser);
+}
+
+exports.getUserById=async(data)=>{
+  const getUser=await prisma.users.findFirst({
+    where:{
+      id:data,
     }
   })
   const serializedUser=JSONBigInt.stringify(getUser);

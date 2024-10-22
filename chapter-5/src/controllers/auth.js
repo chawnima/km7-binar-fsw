@@ -1,6 +1,6 @@
 const authService = require("../services/auth");
 const { successResponse } = require("../utils/response");
-const { BadRequestError } = require("../utils/request");
+const { UnauthorizedError } = require("../utils/request");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -10,17 +10,24 @@ exports.register = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-  const data = await authService.loginUser(req.body);
+  const data = await authService.getUserByEmail(req.body);
   const match = await bcrypt.compare(req.body.password, data.password);
   if (match) {
     const payload = {
       user_id: data.id,
     };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "72h",
-    });
+    const token = {
+      token: jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: "72h",
+      }),
+    };
     successResponse(res, token);
     return;
   }
-  throw new BadRequestError("Email or password wrong");
+  throw new UnauthorizedError("Email or password wrong");
+};
+
+exports.profile = async (req, res, next) => {
+  delete req.userData.password;
+  successResponse(res, req.userData);
 };

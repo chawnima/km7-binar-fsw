@@ -1,3 +1,3 @@
-exports.successResponse = (res, data) => {
-  res.status(200).json({ success: true, data });
+exports.successResponse = (res, data, message = "Operation success") => {
+  res.status(200).json({ success: true, message, data });
 };

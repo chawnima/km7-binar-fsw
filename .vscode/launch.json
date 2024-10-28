@@ -5,6 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Launch Chrome Ch 6",
+      "request": "launch",
+      "type": "chrome",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}\\chapter-6\\student-app"
+    },
+    {
       "type": "node",
       "request": "launch",
       "name": "Launch Program",

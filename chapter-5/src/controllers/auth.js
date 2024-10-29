@@ -11,6 +11,9 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
   const data = await authService.getUserByEmail(req.body);
+  if(!data){
+    throw new UnauthorizedError("No email found");
+  }
   const match = await bcrypt.compare(req.body.password, data.password);
   if (match) {
     const payload = {
@@ -24,7 +27,7 @@ exports.login = async (req, res, next) => {
     successResponse(res, token);
     return;
   }
-  throw new UnauthorizedError("Email or password wrong");
+  throw new UnauthorizedError("password wrong");
 };
 
 exports.profile = async (req, res, next) => {

@@ -25,14 +25,14 @@ function Register() {
     formData.append("password", password);
     formData.append("profile_picture", profilePicture);
 
-    const res = await fetch("http://localhost:3000/auth/register", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
       method: "POST",
       body: formData,
     });
     const data = await res.json();
     if (data.success) {
-      alert(data.message);
       localStorage.setItem("token", data.data.token);
+      window.location = "/";
       return;
     }
     alert(data.message);

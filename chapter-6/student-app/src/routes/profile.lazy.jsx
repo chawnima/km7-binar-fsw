@@ -14,7 +14,9 @@ function Profile() {
     const token = localStorage.getItem("token");
     if (token) {
       getProfile(token);
+      return;
     }
+    window.location = "/login";
   }, []);
 
   const getProfile = async (token) => {
@@ -29,7 +31,7 @@ function Profile() {
       setUser(result.data);
       return;
     }
-    alert(result.message);
+    window.location = "/login";
   };
 
   return (

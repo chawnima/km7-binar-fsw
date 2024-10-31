@@ -18,6 +18,10 @@ function Register() {
   const [profilePicture, setFile] = useState(undefined);
 
   const onSubmit = async (e) => {
+    if (password != rePassword) {
+      alert("Password does not match");
+      return;
+    }
     e.preventDefault();
     const formData = new FormData();
     formData.append("name", name);

@@ -25,7 +25,7 @@ const NavigationBar = () => {
       setUser(result.data);
       return;
     }
-    alert(result.message);
+    localStorage.removeItem("token");
   };
   const logout = (e) => {
     e.preventDefault();

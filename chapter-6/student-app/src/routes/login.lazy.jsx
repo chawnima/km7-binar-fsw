@@ -4,7 +4,7 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const Route = createLazyFileRoute("/login")({
   component: Login,
@@ -14,6 +14,11 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      window.location = "/";
+    }
+  });
   const onSubmit = async (e) => {
     e.preventDefault();
 

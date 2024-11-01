@@ -1,37 +1,45 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser, setToken } from "../../redux/slices/auth";
 
 const NavigationBar = () => {
-  const [user, setUser] = useState(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { token, user } = useSelector((state) => state.auth);
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const getProfile = async (token) => {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/profile`, {
+        headers: {
+          authorization: `Bearer ${token}`,
+          method: "GET",
+        },
+      });
+      const result = await res.json();
+      if (result.success) {
+        dispatch(setUser(result.data));
+        return;
+      }
+      dispatch(setUser(null));
+      dispatch(setToken(null));
+      navigate({ to: "/login" });
+    };
     if (token) {
       getProfile(token);
     }
-  }, []);
+  }, [dispatch, navigate, token]);
 
-  const getProfile = async (token) => {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/profile`, {
-      headers: {
-        authorization: `Bearer ${token}`,
-        method: "GET",
-      },
-    });
-    const result = await res.json();
-    if (result.success) {
-      setUser(result.data);
-      return;
-    }
-    localStorage.removeItem("token");
-  };
   const logout = (e) => {
     e.preventDefault();
-    localStorage.removeItem("token");
-    window.location="/login"
+    dispatch(setUser(null));
+    dispatch(setToken(null));
+    navigate({ to: "/login" });
   };
+
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary">
       <Container>

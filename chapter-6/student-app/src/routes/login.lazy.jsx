@@ -1,22 +1,28 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setToken } from "../redux/slices/auth";
 
 export const Route = createLazyFileRoute("/login")({
   component: Login,
 });
 
 function Login() {
+  const { token } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      window.location = "/";
+    if (token) {
+      navigate({ to: "/" });
     }
   });
   const onSubmit = async (e) => {
@@ -26,17 +32,17 @@ function Login() {
     body.append("email", email);
     body.append("password", password);
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
       body: body,
       method: "POST",
     });
-    const data = await response.json();
-    if (data.success) {
-      localStorage.setItem("token", data.data.token);
-      window.location = "/";
+    const result = await res.json();
+    if (result.success) {
+      dispatch(setToken(result.data.token));
+      navigate({ to: "/" });
       return;
     }
-    alert(data.message);
+    alert(result.message);
   };
   return (
     <Row className="mt-5">

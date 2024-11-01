@@ -1,28 +1,40 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {setToken,setUser} from "../redux/slices/auth"
 
 export const Route = createLazyFileRoute("/register")({
   component: Register,
 });
 
 function Register() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const token = useSelector(state=>state.auth.token)
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
   const [profilePicture, setFile] = useState(undefined);
 
+  useEffect(()=>{
+    if(token){
+      navigate({to:"/"})
+    }
+  },[navigate,token])
+
   const onSubmit = async (e) => {
+    e.preventDefault();
     if (password != rePassword) {
       alert("Password does not match");
       return;
     }
-    e.preventDefault();
     const formData = new FormData();
     formData.append("name", name);
     formData.append("email", email);
@@ -33,13 +45,14 @@ function Register() {
       method: "POST",
       body: formData,
     });
-    const data = await res.json();
-    if (data.success) {
-      localStorage.setItem("token", data.data.token);
-      window.location = "/";
+    const result = await res.json();
+    if (result.success) {
+      dispatch(setToken(result.data.token));
+      dispatch(setUser(result.data.user));
+      navigate({ to: "/" });
       return;
     }
-    alert(data.message);
+    alert(result.message);
   };
 
   return (

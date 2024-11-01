@@ -2,7 +2,7 @@ const studentRepository = require("../repositories/students");
 const { imageUpload } = require("../utils/image-kit");
 
 exports.getStudents = async (name, nickName) => {
-  return await studentRepository.getStudents(name, nickName);
+  return await name || nickName ? studentRepository.getStudents(name, nickName) : studentRepository.getAllStudents();
 }
 
 exports.getStudentsById = async (id) => {

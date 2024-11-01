@@ -3,6 +3,11 @@ const JSONBigInt = require("json-bigint");
 
 const prisma = new PrismaClient();
 
+exports.getAllStudents = async ()=>{
+  const searchedStudent = await prisma.students.findMany({include:{classes:true,universities:true}})
+  const serializedStudent = JSONBigInt.stringify(searchedStudent);
+  return JSONBigInt.parse(serializedStudent);
+}
 exports.getStudents = async (name, nickName) => {
   const searchedStudent = await prisma.students.findMany({
     where: {

@@ -2,9 +2,11 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import Image from "react-bootstrap/Image";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, setToken } from "../../redux/slices/auth";
+import { profile } from "../../services/auth";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -13,13 +15,7 @@ const NavigationBar = () => {
 
   useEffect(() => {
     const getProfile = async (token) => {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/profile`, {
-        headers: {
-          authorization: `Bearer ${token}`,
-          method: "GET",
-        },
-      });
-      const result = await res.json();
+      const result = await profile(token);
       if (result.success) {
         dispatch(setUser(result.data));
         return;
@@ -57,6 +53,17 @@ const NavigationBar = () => {
             {user ? (
               <>
                 <Nav.Link as={Link} to="/profile">
+                  <Image
+                    src={user?.profile_picture}
+                    fluid
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      display: "inline-block",
+                      overflow: "hidden",
+                      borderRadius: "50%",
+                    }}
+                  />{" "}
                   {user?.name}
                 </Nav.Link>
                 <Nav.Link onClick={logout}>Log Out</Nav.Link>

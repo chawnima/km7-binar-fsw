@@ -7,6 +7,7 @@ import Row from "react-bootstrap/Row";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {setToken,setUser} from "../redux/slices/auth"
+import { register } from "../services/auth";
 
 export const Route = createLazyFileRoute("/register")({
   component: Register,
@@ -35,17 +36,13 @@ function Register() {
       alert("Password does not match");
       return;
     }
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("profile_picture", profilePicture);
-
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
-      method: "POST",
-      body: formData,
-    });
-    const result = await res.json();
+    const body = {
+      name,
+      email,
+      password,
+      profilePicture
+    }
+    const result = await register(body)
     if (result.success) {
       dispatch(setToken(result.data.token));
       dispatch(setUser(result.data.user));
@@ -76,6 +73,7 @@ function Register() {
                     placeholder="Your name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    required
                   />
                 </Col>
               </Form.Group>
@@ -93,6 +91,7 @@ function Register() {
                     placeholder="email@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
                   />
                 </Col>
               </Form.Group>
@@ -110,6 +109,7 @@ function Register() {
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    required
                   />
                 </Col>
               </Form.Group>
@@ -128,6 +128,7 @@ function Register() {
                     placeholder="Password"
                     value={rePassword}
                     onChange={(e) => setRePassword(e.target.value)}
+                    required
                   />
                 </Col>
               </Form.Group>

@@ -12,3 +12,13 @@ export const allStudent = async (nickName)=>{
   const result = await res.json();
   return result;
 }
+
+export const getStudentById = async (id)=>{
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/students/${id}`,{
+    headers:{authorization : `Bearer ${token}`},
+    method:"GET"
+  })
+  const result = await res.json();
+  return result;
+}

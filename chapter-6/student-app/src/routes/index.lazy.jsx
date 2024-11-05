@@ -2,6 +2,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { useSelector } from "react-redux";
 import { allStudent } from "../services/student";
 import { useEffect, useState } from "react";
+import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import StudentCard from "../components/Student/studentCard";
 
@@ -27,23 +28,29 @@ function Index() {
       getStudents();
     }
   }, [token]);
+
+  if (!token) {
+    return (
+      <Col>
+        <p>Please login first</p>
+      </Col>
+    );
+  }
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+
   return (
-    <div className="p-2">
-      {!token && (
-        <Col>
-          <p>Please login first</p>
-        </Col>
-      )}
-      {isLoading ? (
-        <h1>Loading...</h1>
-      ) : student.length === 0 ? (
+    <Row className="p-2">
+      {student.length === 0 ? (
         <h1>No student found</h1>
       ) : (
         student.length > 0 &&
         student.map((student) => (
-          <StudentCard student={student} key={student.id}/>
+          <StudentCard student={student} key={student.id} />
         ))
       )}
-    </div>
+    </Row>
   );
 }

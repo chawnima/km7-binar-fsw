@@ -10,7 +10,7 @@ const StudentCard = ({ student }) => {
       <Card style={{ width: "18rem" }}>
         <Card.Img variant="top" src={student?.profile_picture} />
         <Card.Body>
-          <Card.Title>{student?.name}</Card.Title>
+          <Card.Title className="font-bold">{student?.name}</Card.Title>
           <Card.Text>{student?.nick_name}</Card.Text>
           <Button as={Link} href={`/students/${student.id}`} variant="primary">Detail Student</Button>
         </Card.Body>

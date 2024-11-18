@@ -1,55 +1,70 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
+import { getStudentById, updateStudent } from "../../../services/student";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Image from "react-bootstrap/Image";
-import { getUniversities } from "../../services/university";
-import { getClasses } from "../../services/class";
-import { createStudent } from "../../services/student";
-import Protected from "../../components/Auth/Protected";
+import { getClasses } from "../../../services/class";
+import { getUniversities } from "../../../services/university";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
-export const Route = createLazyFileRoute("/students/create")({
-  component: () => (
-    <Protected roles={[1]}>
-      <CreateStudent />
-    </Protected>
-  ),
+export const Route = createLazyFileRoute("/students/edit/$id")({
+  component: EditStudent,
 });
 
-function CreateStudent() {
+function EditStudent() {
   const [name, setName] = useState("");
   const [nickName, setNickName] = useState("");
   const [profilePicture, setProfilePicture] = useState(undefined);
   const [currentProfilePicture, setCurrentProfilePicture] = useState(undefined);
-  const [universities, setUniversities] = useState([]);
   const [universityId, setUniversityId] = useState(0);
-  const [classes, setClasses] = useState([]);
   const [classId, setClassId] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const { id } = Route.useParams();
+  const navigate = useNavigate();
+
+  const { mutate: editStudent } = useMutation({
+    mutationFn: (request) => updateStudent(request),
+    onSuccess: () => {
+      toast.success("Data edit successful");
+    },
+  });
+
+  const { data, isSuccess, isPending, isError } = useQuery({
+    queryKey: ["studentsProfile", id],
+    queryFn: () => getStudentById(id),
+  });
+
+  const { data: universities } = useQuery({
+    queryKey: ["universities"],
+    queryFn: () => getUniversities(),
+  });
+
+  const { data: classes } = useQuery({
+    queryKey: ["classes"],
+    queryFn: () => getClasses(),
+  });
 
   useEffect(() => {
-    const getUniversitiesData = async () => {
-      const result = await getUniversities();
-      if (result?.success) {
-        setUniversities(result?.data);
-      }
-    };
-    const getClassesData = async () => {
-      const result = await getClasses();
-      if (result?.success) {
-        setClasses(result?.data);
-      }
-    };
+    if (isSuccess) {
+      setName(data.data.name);
+      setNickName(data.data.nick_name);
+      setProfilePicture(data.data.profile_picture);
+      setCurrentProfilePicture(data.data.profile_picture);
+      setUniversityId(data.data.university_id);
+      setClassId(data.data.class_id);
+    }
+    if (isError) {
+      navigate({ to: "/" });
+      return;
+    }
+  }, [data, isSuccess, navigate, isError]);
 
-    getUniversitiesData();
-    getClassesData();
-  }, []);
-
-  const onSubmit = (event) => {
-    event.preventDefault();
+  const onSubmit = async (e) => {
+    e.preventDefault();
 
     const body = new FormData();
     body.append("name", name);
@@ -58,29 +73,17 @@ function CreateStudent() {
     body.append("university_id", universityId);
     body.append("class_id", classId);
 
-    const createStudentData = async () => {
-      setIsLoading(true);
-      const result = await createStudent(body);
-      if (result.success) {
-        alert(result.message);
-        setIsLoading(false);
-        return;
-      }
-      alert(result.message);
-      setIsLoading(false);
-    };
-
-    createStudentData();
+    editStudent(body);
   };
 
-  if (isLoading) {
+  if (isPending) {
     return <h1>Loading...</h1>;
   }
   return (
     <Row className="mt-5">
       <Col className="offset-md-3">
         <Card>
-          <Card.Header className="text-center">Create Student</Card.Header>
+          <Card.Header className="text-center">Edit Student</Card.Header>
           <Card.Body>
             <Form onSubmit={onSubmit}>
               <Form.Group as={Row} className="mb-3" controlId="name">
@@ -124,12 +127,16 @@ function CreateStudent() {
                     aria-label="Default select example"
                     onChange={(e) => setUniversityId(e.target.value)}
                   >
-                    <option disabled selected>
-                      Select University
-                    </option>
-                    {universities.length > 0 &&
-                      universities.map((university) => (
-                        <option key={university?.id} value={university?.id}>
+                    <option disabled>Select University</option>
+                    {universities?.length > 0 &&
+                      universities?.map((university) => (
+                        <option
+                          key={university?.id}
+                          value={university?.id}
+                          selected={
+                            university?.id == universityId ? true : false
+                          }
+                        >
                           {university?.name}
                         </option>
                       ))}
@@ -148,9 +155,13 @@ function CreateStudent() {
                     <option disabled selected>
                       Select Class
                     </option>
-                    {classes.length > 0 &&
-                      classes.map((c) => (
-                        <option key={c?.id} value={c?.id}>
+                    {classes?.length > 0 &&
+                      classes?.map((c) => (
+                        <option
+                          key={c?.id}
+                          value={c?.id}
+                          selected={c?.id == classId ? true : false}
+                        >
                           {c?.class}
                         </option>
                       ))}
@@ -165,7 +176,6 @@ function CreateStudent() {
                   <Form.Control
                     type="file"
                     placeholder="Choose File"
-                    required
                     onChange={(event) => {
                       setProfilePicture(event.target.files[0]);
                       setCurrentProfilePicture(
@@ -176,19 +186,15 @@ function CreateStudent() {
                   />
                 </Col>
               </Form.Group>
-              <Form.Group
-                as={Row}
-                className="mb-3"
-                controlId="currentProfilePicture"
-              >
+              <Form.Group as={Row} className="mb-3" controlId="profilePicture">
                 <Form.Label column sm={3}>
                   Current Profile Picture
                 </Form.Label>
-                <Image src={currentProfilePicture} fluid />
+                <Image src={currentProfilePicture} />
               </Form.Group>
               <div className="d-grid gap-2">
                 <Button type="submit" variant="primary">
-                  Create Student
+                  Edit Student
                 </Button>
               </div>
             </Form>

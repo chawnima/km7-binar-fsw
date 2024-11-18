@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
@@ -10,6 +10,8 @@ import { getUniversities } from "../../services/university";
 import { getClasses } from "../../services/class";
 import { createStudent } from "../../services/student";
 import Protected from "../../components/Auth/Protected";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 export const Route = createLazyFileRoute("/students/create")({
   component: () => (
@@ -24,29 +26,27 @@ function CreateStudent() {
   const [nickName, setNickName] = useState("");
   const [profilePicture, setProfilePicture] = useState(undefined);
   const [currentProfilePicture, setCurrentProfilePicture] = useState(undefined);
-  const [universities, setUniversities] = useState([]);
   const [universityId, setUniversityId] = useState(0);
-  const [classes, setClasses] = useState([]);
   const [classId, setClassId] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const getUniversitiesData = async () => {
-      const result = await getUniversities();
-      if (result?.success) {
-        setUniversities(result?.data);
-      }
-    };
-    const getClassesData = async () => {
-      const result = await getClasses();
-      if (result?.success) {
-        setClasses(result?.data);
-      }
-    };
+  const { mutate: createStudentData, isPending } = useMutation({
+    mutationFn: (body) => createStudent(body),
+    onSuccess: () => {
+      toast.success("Data added");
+    },
+  });
 
-    getUniversitiesData();
-    getClassesData();
-  }, []);
+  const { data: universities} = useQuery(
+    {
+      queryKey: ["universities"],
+      queryFn: () => getUniversities(),
+    }
+  );
+
+  const { data: classes } = useQuery({
+    queryKey: ["classes"],
+    queryFn: () => getClasses(),
+  });
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -58,24 +58,8 @@ function CreateStudent() {
     body.append("university_id", universityId);
     body.append("class_id", classId);
 
-    const createStudentData = async () => {
-      setIsLoading(true);
-      const result = await createStudent(body);
-      if (result.success) {
-        alert(result.message);
-        setIsLoading(false);
-        return;
-      }
-      alert(result.message);
-      setIsLoading(false);
-    };
-
-    createStudentData();
+    createStudentData(body);
   };
-
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
   return (
     <Row className="mt-5">
       <Col className="offset-md-3">
@@ -187,7 +171,7 @@ function CreateStudent() {
                 <Image src={currentProfilePicture} fluid />
               </Form.Group>
               <div className="d-grid gap-2">
-                <Button type="submit" variant="primary">
+                <Button type="submit" variant="primary" disabled={isPending}>
                   Create Student
                 </Button>
               </div>

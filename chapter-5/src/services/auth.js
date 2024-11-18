@@ -23,3 +23,7 @@ exports.createUser = async (data,file) => {
 exports.getUserByEmail = async(data)=>{
   return await userRepositories.getUserByEmail(data);
 }
+
+exports.getUserByGoogle = async(data)=>{
+  return await userRepositories.getUserByGoogle(data);
+}
